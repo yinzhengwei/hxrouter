@@ -168,7 +168,7 @@ object HxRouter {
                 mFlag = arrayListOf()
             }
             //绑定要跳转的目标界面的路径
-            component = ComponentName(HxRouter.javaClass.`package`?.name!!, mClassPath)
+            component = ComponentName(mContext.get()?.packageName!!, mClassPath)
             mClassPath = ""
 
             try {
