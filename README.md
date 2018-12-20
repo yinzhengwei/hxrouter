@@ -30,22 +30,17 @@ dependencies {
 
 #使用方式
 
-Step 1
+ Step 1
 
-在自定义的application中的onCreate()里初始化：
-
-HxRouter.init(this.applicationContext)
+   在自定义的application中的onCreate()里初始化：HxRouter.init(this.applicationContext)
 
 
 Step 2
 
-定义目标界面的类名路径：
+定义目标界面的类名路径(以下两种方式都可以)：
 
 val classPath = "com.example.demo.HxArouterTestActivity"
-
-或者
-
-val classPath = HxArouterTestActivity::class.java.name
+//val classPath = HxArouterTestActivity::class.java.name
 
 
 需要跳转的地方：
@@ -53,8 +48,6 @@ val classPath = HxArouterTestActivity::class.java.name
 方式一：
 
 HxRouter.build(classPath).start()
-
-或
 
 方式二（put方式表示需要传递的参数；start传两参数表示需要走当前界面的onActivityForResult回调）：
 
