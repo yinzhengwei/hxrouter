@@ -2,7 +2,7 @@
 
 此library是针对activity的跳转封装的一个统一路由，使用简单方便：
 
-配置方式
+#配置方式
 
 Step 1. Add the JitPack repository to your build file
 
@@ -24,11 +24,11 @@ dependencies {
 
 	...
 
-	implementation 'com.github.yinzhengwei:hxrouter:1.0'
+	implementation 'com.github.yinzhengwei:hxrouter:1.0.0'
 }
 
 
-使用方式
+#使用方式
 
 Step 1
 
@@ -61,7 +61,7 @@ HxRouter.build(classPath).start()
 HxRouter.build(classPath).put("key", "yzw").start(this@MainActivity, 1)
 
 
-注意
+#注意
 
 别忘了要跳转的目标activity在manifest.xml里注册！
 
