@@ -40,6 +40,7 @@ Step 2
 定义目标界面的类名路径(以下两种方式都可以)：
 
 val classPath = "com.example.demo.HxArouterTestActivity"
+
 //val classPath = HxArouterTestActivity::class.java.name
 
 
