@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import java.lang.Exception
 import java.lang.ref.WeakReference
 
 /**
@@ -23,7 +22,7 @@ object HxRouter {
     private var mClassPath = ""
 
     //跳转界面需要传递的参数
-    private var mParams = HashMap<String, Any>()
+    private var mParams = HashMap<String, Any?>()
 
     //intent需要设置的模式
     private var mCategory = ""
@@ -69,7 +68,7 @@ object HxRouter {
      * 获取传递的参数
      * @Params  key/value
      */
-    fun put(key: String, value: Any): HxRouter {
+    fun put(key: String, value: Any?): HxRouter {
         mParams[key] = value
         return this
     }
@@ -78,7 +77,7 @@ object HxRouter {
      * 获取传递的参数
      * @Params  k/v = map
      */
-    fun put(paramsMap: HashMap<String, Any>): HxRouter {
+    fun put(paramsMap: HashMap<String, Any?>): HxRouter {
         mParams = paramsMap
         return this
     }
@@ -149,7 +148,7 @@ object HxRouter {
             //判断是否有需要传递的参数
             if (mParams.isNotEmpty()) {
                 mParams.forEach {
-                    putExtra(it.key, it.value.toString())
+                    putExtra(it.key, if (it.value!=null)it.value.toString() else "")
                 }
                 //用完后及时清除，防止被下次的复用
                 mParams = HashMap()
