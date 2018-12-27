@@ -177,7 +177,7 @@ object HxRouter {
             return
         }
 
-        if (mAction == Intent.ACTION_MAIN){
+        if (mAction == Intent.ACTION_MAIN) {
 
         }
 
@@ -206,7 +206,8 @@ object HxRouter {
                 mFlag = arrayListOf()
             }
             //绑定要跳转的目标界面的路径
-            component = ComponentName(mContext.get()?.packageName!!, mClassPath)
+            if (mClassPath.isNotEmpty())
+                component = ComponentName(mContext.get()?.packageName!!, mClassPath)
             mClassPath = ""
 
             try {
