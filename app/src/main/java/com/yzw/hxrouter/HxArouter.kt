@@ -177,10 +177,6 @@ object HxRouter {
             return
         }
 
-        if (mAction == Intent.ACTION_MAIN) {
-
-        }
-
         Intent(mAction).run {
             //判断是否有需要传递的参数
             if (mParams.isNotEmpty()) {
@@ -191,7 +187,10 @@ object HxRouter {
                 mParams = HashMap()
             }
 
-            setDataAndType(mData, mType)
+            if (mData!=null)
+                data = mData
+            if (mType.isNotEmpty())
+                type = mType
 
             //判断是否需要设置intent的category
             if (mCategory.isNotEmpty()) {
