@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import java.lang.ref.WeakReference
 
@@ -33,6 +34,11 @@ object HxRouter {
     //转场动画的id
     private var mEnterAnimID = 0
     private var mExitAnimID = 0
+
+    private var mAction = Intent.ACTION_MAIN
+    private var mIntent = Intent(mAction)
+    private var mData: Uri? = null
+    private var mType = ""
 
     /**
      * 获取上下文环境对象
@@ -103,6 +109,42 @@ object HxRouter {
     }
 
     /**
+     * 添加Intent的action
+     * @Params action = String
+     */
+    fun addAction(action: String): HxRouter {
+        mAction = action
+        return this
+    }
+
+    /**
+     * 添加Intent
+     * @Params intent = Intent
+     */
+    fun addIntent(intent: Intent): HxRouter {
+        mIntent = intent
+        return this
+    }
+
+    /**
+     * 添加data
+     * @Params data = Uri
+     */
+    fun addData(uri: Uri): HxRouter {
+        mData = uri
+        return this
+    }
+
+    /**
+     * 添加type
+     * @Params type = String
+     */
+    fun addData(type: String): HxRouter {
+        mType = type
+        return this
+    }
+
+    /**
      * 获取转场动画的参数
      * @Params fromContext 当前界面的上下文
      * @Params enterAnim 旧界面退出时的动画
@@ -144,15 +186,17 @@ object HxRouter {
             }
             return
         }
-        Intent(Intent.ACTION_MAIN).apply {
+        mIntent.run {
             //判断是否有需要传递的参数
             if (mParams.isNotEmpty()) {
                 mParams.forEach {
-                    putExtra(it.key, if (it.value!=null)it.value.toString() else "")
+                    putExtra(it.key, if (it.value != null) it.value.toString() else "")
                 }
                 //用完后及时清除，防止被下次的复用
                 mParams = HashMap()
             }
+
+            setDataAndType(mData, mType)
 
             //判断是否需要设置intent的category
             if (mCategory.isNotEmpty()) {
@@ -184,6 +228,11 @@ object HxRouter {
             //判断是否需要开启转场动画
             if (currentActivity.get() != null)
                 anim()
+
+            mAction = Intent.ACTION_MAIN
+            mIntent = Intent(mAction)
+            mData = null
+            mType = ""
         }
     }
 
