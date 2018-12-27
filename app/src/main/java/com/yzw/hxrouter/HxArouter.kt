@@ -36,7 +36,6 @@ object HxRouter {
     private var mExitAnimID = 0
 
     private var mAction = Intent.ACTION_MAIN
-    private var mIntent = Intent(mAction)
     private var mData: Uri? = null
     private var mType = ""
 
@@ -118,15 +117,6 @@ object HxRouter {
     }
 
     /**
-     * 添加Intent
-     * @Params intent = Intent
-     */
-    fun addIntent(intent: Intent): HxRouter {
-        mIntent = intent
-        return this
-    }
-
-    /**
      * 添加data
      * @Params data = Uri
      */
@@ -186,7 +176,12 @@ object HxRouter {
             }
             return
         }
-        mIntent.run {
+
+        if (mAction == Intent.ACTION_MAIN){
+
+        }
+
+        Intent(mAction).run {
             //判断是否有需要传递的参数
             if (mParams.isNotEmpty()) {
                 mParams.forEach {
@@ -230,7 +225,6 @@ object HxRouter {
                 anim()
 
             mAction = Intent.ACTION_MAIN
-            mIntent = Intent(mAction)
             mData = null
             mType = ""
         }
