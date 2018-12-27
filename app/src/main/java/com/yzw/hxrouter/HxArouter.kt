@@ -129,7 +129,7 @@ object HxRouter {
      * 添加type
      * @Params type = String
      */
-    fun addData(type: String): HxRouter {
+    fun addType(type: String): HxRouter {
         mType = type
         return this
     }
