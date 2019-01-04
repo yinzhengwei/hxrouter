@@ -4,8 +4,12 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
+import java.io.Serializable
 import java.lang.ref.WeakReference
 
 /**
@@ -180,9 +184,21 @@ object HxRouter {
         Intent(mAction).run {
             //判断是否有需要传递的参数
             if (mParams.isNotEmpty()) {
+
+                val bundle = Bundle()
                 mParams.forEach {
-                    putExtra(it.key, if (it.value != null) it.value.toString() else "")
+                    when (it.value) {
+                        is String -> bundle.putString(it.key, it.value.toString())
+                        is Int -> bundle.putInt(it.key, it.value.toString().toInt())
+                        is Long -> bundle.putLong(it.key, it.value.toString().toLong())
+                        is Boolean -> bundle.putBoolean(it.key, it.value.toString().toBoolean())
+                        is Float -> bundle.putFloat(it.key, it.value.toString().toFloat())
+                        is Double -> bundle.putDouble(it.key, it.value.toString().toDouble())
+                        is Serializable -> bundle.putSerializable(it.key, it.value  as Serializable)
+                        is Parcelable -> bundle.putParcelable(it.key, it.value  as Parcelable)
+                    }
                 }
+                this.putExtras(bundle)
                 //用完后及时清除，防止被下次的复用
                 mParams = HashMap()
             }
@@ -197,6 +213,9 @@ object HxRouter {
                 addCategory(mCategory)
                 mCategory = ""
             }
+
+            addFlags(FLAG_ACTIVITY_NEW_TASK)
+
             //判断是否需要设置intent的flags
             if (mFlag.isNotEmpty()) {
                 mFlag.forEach {
