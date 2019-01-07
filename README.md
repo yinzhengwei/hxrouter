@@ -30,10 +30,11 @@ dependencies {
 
 #使用方式
 
- Step 1
+Step 1
 
-   在自定义的application中的onCreate()里初始化：HxRouter.init(this.applicationContext)
-
+在自定义的application中的onCreate()里初始化：
+	
+	HxRouter.init(this.applicationContext)
 
 Step 2
 
@@ -63,7 +64,7 @@ Step 2
 
 	HxRouter.build(classPath).start(object :HxInterceptor{
             override fun process(interceptorResult: HxInterceptorResult) {
-                //todo 添加需要处理的逻辑，此处以'是否登陆'举例
+                //TODO 添加需要处理的逻辑，此处以'是否登陆'举例
                 if(isLogin){
                     //如果已经登陆，则在启动跳转
                     interceptorResult.finish()
