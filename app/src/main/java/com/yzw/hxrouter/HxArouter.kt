@@ -39,7 +39,8 @@ object HxRouter {
     private var mEnterAnimID = 0
     private var mExitAnimID = 0
 
-    private var mAction = Intent.ACTION_MAIN
+    //    private var mAction = Intent.ACTION_MAIN
+    private var mAction = ""
     private var mData: Uri? = null
     private var mType = ""
 
@@ -224,7 +225,10 @@ object HxRouter {
     }
 
     private fun open(fromContext: Activity?, requestCode: Int?) {
-        val intent = Intent(mAction)
+        val intent = Intent()
+
+        if (mAction.isNotEmpty())
+            intent.action = mAction
 
         //判断是否有需要传递的参数
         if (mParams.isNotEmpty()) {
@@ -301,7 +305,7 @@ object HxRouter {
         mExitAnimID = 0
         currentActivity = WeakReference<Activity>(null)
 
-        mAction = Intent.ACTION_MAIN
+        mAction = ""
         mData = null
         mType = ""
     }
