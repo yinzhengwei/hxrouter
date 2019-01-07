@@ -256,15 +256,15 @@ object HxRouter {
 
         //判断是否需要设置intent的category
         if (mCategory.isNotEmpty()) {
-            addCategory(mCategory)
+            intent.addCategory(mCategory)
         }
 
-        addFlags(FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
 
         //判断是否需要设置intent的flags
         if (mFlag.isNotEmpty()) {
             mFlag.forEach {
-                addFlags(it)
+                intent.addFlags(it)
             }
         }
         //绑定要跳转的目标界面的路径
