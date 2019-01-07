@@ -31,7 +31,7 @@ object HxRouter {
 
     //intent需要设置的模式
     private var mCategory = ""
-    private var mFlag = arrayListOf<Int>()
+    private var mFlag = -1
 
     //开启转场动画时需要的上下文
     private var currentActivity = WeakReference<Activity>(null)
@@ -39,8 +39,7 @@ object HxRouter {
     private var mEnterAnimID = 0
     private var mExitAnimID = 0
 
-    //    private var mAction = Intent.ACTION_MAIN
-    private var mAction = ""
+    private var mAction = Intent.ACTION_MAIN
     private var mData: Uri? = null
     private var mType = ""
 
@@ -77,7 +76,7 @@ object HxRouter {
              */
             clearCache()
 
-            mClassPath = classPath
+            mClassPath = classPath ?: ""
         }
         return this
     }
@@ -111,12 +110,10 @@ object HxRouter {
 
     /**
      * 获取设置intent的参数
-     * @Params flags = array
+     * @Params flags = int
      */
-    fun addFlags(vararg flags: Int): HxRouter {
-        flags.forEach {
-            mFlag.add(it)
-        }
+    fun addFlags(flags: Int): HxRouter {
+        mFlag = flags
         return this
     }
 
@@ -225,10 +222,7 @@ object HxRouter {
     }
 
     private fun open(fromContext: Activity?, requestCode: Int?) {
-        val intent = Intent()
-
-        if (mAction.isNotEmpty())
-            intent.action = mAction
+        val intent = Intent(mAction)
 
         //判断是否有需要传递的参数
         if (mParams.isNotEmpty()) {
@@ -263,13 +257,9 @@ object HxRouter {
             intent.addCategory(mCategory)
         }
 
-        intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-
         //判断是否需要设置intent的flags
-        if (mFlag.isNotEmpty()) {
-            mFlag.forEach {
-                intent.addFlags(it)
-            }
+        if (mFlag != -1) {
+            intent.addFlags(mFlag)
         }
         //绑定要跳转的目标界面的路径
         if (mClassPath.isNotEmpty())
@@ -278,6 +268,8 @@ object HxRouter {
         try {
             //启动跳转
             if (requestCode == null) {
+                if (mFlag != FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 mContext.get()?.startActivity(intent)
             } else {
                 fromContext?.startActivityForResult(intent, requestCode)
@@ -297,7 +289,7 @@ object HxRouter {
     private fun clearCache() {
         mParams = HashMap()
         mCategory = ""
-        mFlag = arrayListOf()
+        mFlag = -1
         mClassPath = ""
 
         //完成动画后将设置的id和上下文对象清空
@@ -305,7 +297,7 @@ object HxRouter {
         mExitAnimID = 0
         currentActivity = WeakReference<Activity>(null)
 
-        mAction = ""
+        mAction = Intent.ACTION_MAIN
         mData = null
         mType = ""
     }

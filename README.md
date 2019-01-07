@@ -24,7 +24,7 @@ dependencies {
 
 	...
 
-	implementation 'com.github.yinzhengwei:hxrouter:2.9'
+	implementation 'com.github.yinzhengwei:hxrouter:3.0'
 }
 
 
