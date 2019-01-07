@@ -39,8 +39,7 @@ object HxRouter {
     private var mEnterAnimID = 0
     private var mExitAnimID = 0
 
-    //    private var mAction = Intent.ACTION_MAIN
-    private var mAction = ""
+    private var mAction = Intent.ACTION_MAIN
     private var mData: Uri? = null
     private var mType = ""
 
@@ -225,73 +224,70 @@ object HxRouter {
     }
 
     private fun open(fromContext: Activity?, requestCode: Int?) {
-        val intent = Intent()
+        Intent(mAction).run {
+            //判断是否有需要传递的参数
+            if (mParams.isNotEmpty()) {
 
-        if (mAction.isNotEmpty())
-            intent.action = mAction
+                val bundle = Bundle()
+                mParams.forEach {
+                    val key = it.key
+                    val value = it.value
+                    if (value != null)
+                        when (value) {
+                            is String -> bundle.putString(key, value.toString())
+                            is Int -> bundle.putInt(key, value.toString().toInt())
+                            is Long -> bundle.putLong(key, value.toString().toLong())
+                            is Boolean -> bundle.putBoolean(key, value.toString().toBoolean())
+                            is Float -> bundle.putFloat(key, value.toString().toFloat())
+                            is Double -> bundle.putDouble(key, value.toString().toDouble())
 
-        //判断是否有需要传递的参数
-        if (mParams.isNotEmpty()) {
-
-            val bundle = Bundle()
-            mParams.forEach {
-                val key = it.key
-                val value = it.value
-                if (value != null)
-                    when (value) {
-                        is String -> bundle.putString(key, value.toString())
-                        is Int -> bundle.putInt(key, value.toString().toInt())
-                        is Long -> bundle.putLong(key, value.toString().toLong())
-                        is Boolean -> bundle.putBoolean(key, value.toString().toBoolean())
-                        is Float -> bundle.putFloat(key, value.toString().toFloat())
-                        is Double -> bundle.putDouble(key, value.toString().toDouble())
-
-                        is Serializable -> bundle.putSerializable(key, it.value as Serializable)
-                        is Parcelable -> bundle.putParcelable(key, it.value as Parcelable)
-                    }
+                            is Serializable -> bundle.putSerializable(key, it.value as Serializable)
+                            is Parcelable -> bundle.putParcelable(key, it.value as Parcelable)
+                        }
+                }
+                putExtras(bundle)
             }
-            intent.putExtras(bundle)
-        }
 
-        if (mData != null)
-            intent.data = mData
-        if (mType.isNotEmpty())
-            intent.type = mType
+            if (mData != null)
+                data = mData
+            if (mType.isNotEmpty())
+                type = mType
 
-        //判断是否需要设置intent的category
-        if (mCategory.isNotEmpty()) {
-            intent.addCategory(mCategory)
-        }
-
-        intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-
-        //判断是否需要设置intent的flags
-        if (mFlag.isNotEmpty()) {
-            mFlag.forEach {
-                intent.addFlags(it)
+            //判断是否需要设置intent的category
+            if (mCategory.isNotEmpty()) {
+                addCategory(mCategory)
             }
-        }
-        //绑定要跳转的目标界面的路径
-        if (mClassPath.isNotEmpty())
-            intent.component = ComponentName(mContext.get()?.packageName!!, mClassPath)
 
-        try {
-            //启动跳转
-            if (requestCode == null) {
-                mContext.get()?.startActivity(intent)
-            } else {
-                fromContext?.startActivityForResult(intent, requestCode)
+            addFlags(FLAG_ACTIVITY_NEW_TASK)
+
+            //判断是否需要设置intent的flags
+            if (mFlag.isNotEmpty()) {
+                mFlag.forEach {
+                    addFlags(it)
+                }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+            //绑定要跳转的目标界面的路径
+            if (mClassPath.isNotEmpty())
+                component = ComponentName(mContext.get()?.packageName!!, mClassPath)
+
+            try {
+                //启动跳转
+                if (requestCode == null) {
+                    mContext.get()?.startActivity(this)
+                } else {
+                    fromContext?.startActivityForResult(this, requestCode)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            //判断是否需要开启转场动画
+            if (currentActivity.get() != null)
+                currentActivity.get()?.overridePendingTransition(mEnterAnimID, mExitAnimID)
+
+            //用完后及时清除，防止被下次的复用
+            clearCache()
         }
-
-        //判断是否需要开启转场动画
-        if (currentActivity.get() != null)
-            currentActivity.get()?.overridePendingTransition(mEnterAnimID, mExitAnimID)
-
-        //用完后及时清除，防止被下次的复用
-        clearCache()
     }
 
     private fun clearCache() {
@@ -305,7 +301,7 @@ object HxRouter {
         mExitAnimID = 0
         currentActivity = WeakReference<Activity>(null)
 
-        mAction = ""
+        mAction = Intent.ACTION_MAIN
         mData = null
         mType = ""
     }
