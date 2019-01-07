@@ -24,7 +24,7 @@ dependencies {
 
 	...
 
-	implementation 'com.github.yinzhengwei:hxrouter:2.4'
+	implementation 'com.github.yinzhengwei:hxrouter:2.5'
 }
 
 
@@ -46,14 +46,28 @@ val classPath = "com.example.demo.HxArouterTestActivity"
 
 需要跳转的地方：
 
-方式一：
+方式一（无参数：无回调/有回调）：
 
-HxRouter.build(classPath).start()
+HxRouter.build(classPath).start() | HxRouter.build(classPath).start(mActivity, 1)
 
-方式二（put方式表示需要传递的参数；start传两参数表示需要走当前界面的onActivityForResult回调）：
+方式二（带参：无回调/有回调）：
 
-HxRouter.build(classPath).put("key", "yzw").start(this@MainActivity, 1)
+HxRouter.build(classPath).put("key", "yzw").start() | HxRouter.build(classPath).put("key", "yzw").start(mActivity, 1)
 
+方式三（在跳转时添加拦截器，拦截器里处理完了逻辑需要手动调用完成或取消的方法）：
+
+HxRouter.build(classPath).start(object :HxInterceptor{
+            override fun process(interceptorResult: HxInterceptorResult) {
+                //todo 添加需要处理的逻辑，此处以'是否登陆'举例
+                if(isLogin){
+                    //如果已经登陆，则在启动跳转
+                    interceptorResult.finish()
+                }else{
+                    //如果在处理完逻辑后想取消跳转，直接调用cancel()
+                    interceptorResult.cancel()
+                }
+            }
+        })
 
 #注意
 
