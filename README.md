@@ -39,24 +39,29 @@ Step 2
 
 定义目标界面的类名路径(以下两种方式都可以)：
 
-val classPath = "com.example.demo.HxArouterTestActivity"
-
-//val classPath = HxArouterTestActivity::class.java.name
+	val classPath = "com.example.demo.HxArouterTestActivity"
+	//val classPath = HxArouterTestActivity::class.java.name
 
 
 需要跳转的地方：
 
-方式一（无参数：无回调/有回调）：
+方式一（无参数）：
 
-HxRouter.build(classPath).start() | HxRouter.build(classPath).start(mActivity, 1)
+	//无回调
+	HxRouter.build(classPath).start() 
+	//有回调
+	HxRouter.build(classPath).start(mActivity, 1)
 
-方式二（带参：无回调/有回调）：
+方式二（带参）：
 
-HxRouter.build(classPath).put("key", "yzw").start() | HxRouter.build(classPath).put("key", "yzw").start(mActivity, 1)
+	//无回调
+	HxRouter.build(classPath).put("key", "yzw").start()
+	//有回调
+	HxRouter.build(classPath).put("key", "yzw").start(mActivity, 1)
 
 方式三（在跳转时添加拦截器，拦截器里处理完了逻辑需要手动调用完成或取消的方法）：
 
-HxRouter.build(classPath).start(object :HxInterceptor{
+	HxRouter.build(classPath).start(object :HxInterceptor{
             override fun process(interceptorResult: HxInterceptorResult) {
                 //todo 添加需要处理的逻辑，此处以'是否登陆'举例
                 if(isLogin){
